@@ -1,0 +1,19 @@
+name: Panda Offers Automatik
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # alle 5 Minuten (GitHub startet manchmal ein paar Minuten später)
+  workflow_dispatch:        # Knopf „Run workflow“ zum Testen
+
+jobs:
+  aufruf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Offers anstoßen
+        env:
+          URL: ${{ secrets.OFFERS_AUTO_URL }}
+        run: |
+          antwort=$(curl -sS --max-time 60 --retry 2 "$URL")
+          echo "$antwort"
+          [ "$antwort" = "OK" ]
